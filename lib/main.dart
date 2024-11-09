@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: const MyHomePage(title: 'Flutter Demo Rian lorem'),
-      home: MapMethodExample(),
+      home: OOPExample(),
     );
   }
 }
@@ -251,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }*/
 
-class MapMethodExample extends StatelessWidget {
+/*class MapMethodExample extends StatelessWidget {
   late final List<Map<String, String>> profile = [
     {
       'fullname': 'Rian Wibowo Rafions',
@@ -308,6 +308,92 @@ class MapMethodExample extends StatelessWidget {
           return ListTile(
             title: Text(fullname!),
             subtitle: Text('$gender \n$age'),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}*/
+
+class Person {
+  String? fullname;
+  String? birthdate;
+  String? gender;
+
+  String convertGender(String gender) {
+    var result = "";
+
+    if (gender == 'L') {
+      result = 'Laki-laki';
+    } else if (gender == 'P') {
+      result = 'Perempuan';
+    } else {
+      result = 'tidak diketahui';
+    }
+
+    return result;
+  }
+
+  String getAge(String birthdate) {
+    var parseDate = DateTime.parse(birthdate);
+    var today = DateTime.now();
+    int yy = today.year - parseDate.year;
+    int mm = today.month - parseDate.month;
+    int dd = today.day - parseDate.day;
+
+    if (dd < 0) {
+      mm--;
+      dd += DateTime(today.year, today.month, 0).day;
+    }
+    if (mm < 0) {
+      yy--;
+      mm += 12;
+    }
+
+    var result = '$yy tahun $mm bulan $dd hari';
+    return result;
+  }
+}
+
+class OOPExample extends StatelessWidget {
+  final List<Map<String, String>> profile = [
+    {
+      'fullname': 'Rian Wibowo Rafions',
+      'birthdate': '2002-04-25',
+      'gender': 'L'
+    },
+    {
+      'fullname': 'Desty Fitriana Cahyani',
+      'birthdate': '2002-04-25',
+      'gender': 'P'
+    },
+    {
+      'fullname': 'Balkis Rafiana Rafions',
+      'birthdate': '2002-04-25',
+      'gender': 'P'
+    }
+  ];
+
+  Person person = Person();
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      appBar: AppBar(
+        //set the app bar title
+        title: Text('Daftar Profile'),
+      ),
+      body: ListView(
+        children: profile.map((profileInfo) {
+          person.fullname = profileInfo['fullname'];
+          person.gender = profileInfo['gender'];
+          person.birthdate = profileInfo['birthdate'];
+
+          return ListTile(
+            title: Text(person.fullname!),
+            subtitle: Text(
+                '${person.convertGender('${person.gender}')} \n${person.getAge('${person.birthdate}')}'),
           );
         }).toList(),
       ),
