@@ -1,24 +1,41 @@
 import 'package:flutter/material.dart';
+import 'login.dart';
+import 'registration.dart';
+import 'maintenance.dart';
+import 'landing.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      primaryColor: Color(0xFF3B789A),
+      colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF3B789A)),
+    ),
+    initialRoute: 'landing',
+    routes: {
+      'login': (context) => mylogin(),
+      'register': (context) => register(),
+      'maintenance': (context) => maintenance(),
+      'landing': (context) => mylanding()
+    },
+  ));
 }
 
 //void main()=> runApp(const MyApp());
 
-/*void main(List<String> filters) {
+/*void main(List<String> .) {
     print('filters: $filters')
 }*/
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+//class MyApp extends StatelessWidget {
+  //const MyApp({super.key});
 
   // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
+  //@override
+  //Widget build(BuildContext context) {
+    //return MaterialApp(
+      //title: 'Flutter Demo',
+      //theme: ThemeData(
         // This is the theme of your application.
         //
         // TRY THIS: Try running your application with "flutter run". You'll see
@@ -34,15 +51,15 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(107, 42, 207, 53)),
-        useMaterial3: true,
-      ),
+        //colorScheme: ColorScheme.fromSeed(
+            //seedColor: const Color.fromARGB(107, 42, 207, 53)),
+       // useMaterial3: true,
+      //),
       //home: const MyHomePage(title: 'Flutter Demo Rian lorem'),
-      home: OOPExample(),
-    );
-  }
-}
+      //home: OOPExample(),
+    //);
+  //}
+//}
 
 /*class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -315,7 +332,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }*/
 
-class Person {
+/*class Person {
   String? fullname;
   String? birthdate;
   String? gender;
@@ -399,4 +416,4 @@ class OOPExample extends StatelessWidget {
       ),
     );
   }
-}
+}*/
