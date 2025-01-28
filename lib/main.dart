@@ -1,22 +1,33 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'registration.dart';
 import 'maintenance.dart';
 import 'landing.dart';
+import 'loadingapp.dart';
+import 'home.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       primaryColor: Color(0xFF3B789A),
       colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF3B789A)),
     ),
-    initialRoute: 'landing',
+    initialRoute: 'loadingApp',
     routes: {
       'login': (context) => mylogin(),
       'register': (context) => register(),
       'maintenance': (context) => maintenance(),
-      'landing': (context) => mylanding()
+      'landing': (context) => mylanding(),
+      'loadingApp': (context) => myloadingApp(),
+      'home': (context) => myHomePage(),
     },
   ));
 }

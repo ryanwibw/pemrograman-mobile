@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class mylogin extends StatefulWidget {
   const mylogin({Key? key}) : super(key: key);
@@ -9,8 +10,11 @@ class mylogin extends StatefulWidget {
 }
 
 class _myloginState extends State<mylogin> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool isChecked = false;
   bool _isObscure = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,16 +44,14 @@ class _myloginState extends State<mylogin> {
           ),
           SingleChildScrollView(
             child: Container(
-              margin:
-                  EdgeInsets.symmetric(horizontal: 30.0), // Margin kanan-kiri
+              margin: EdgeInsets.symmetric(horizontal: 30.0),
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(
-                        left: 20.0, top: 5, bottom: 30), // Jarak luar
+                    margin: EdgeInsets.only(left: 20.0, top: 5, bottom: 30),
                     child: SvgPicture.asset(
                       'web/icons/login1.svg',
                       height: 280.0,
@@ -64,6 +66,7 @@ class _myloginState extends State<mylogin> {
                     ),
                   ),
                   TextField(
+                    controller: _emailController,
                     cursorHeight: 14,
                     decoration: InputDecoration(
                         prefixIcon: Icon(
@@ -101,6 +104,7 @@ class _myloginState extends State<mylogin> {
                     ),
                   ),
                   TextField(
+                    controller: _passwordController,
                     obscureText: _isObscure,
                     decoration: InputDecoration(
                         prefixIcon: Icon(
@@ -135,53 +139,68 @@ class _myloginState extends State<mylogin> {
                             borderSide: BorderSide(
                                 color: Color(0xFF3B789A), width: 2.0))),
                   ),
-                  Row(
-                    children: [
-                      Padding(padding: EdgeInsets.only(left: 8)),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isChecked = !isChecked; // Toggle state
-                          });
-                          print("Check Circle pressed");
-                        },
-                        child: Icon(
-                          isChecked
-                              ? Icons.check_circle_outlined
-                              : Icons.circle_outlined,
-                          color: Color(0xFF3B789A),
-                          size: 17.0,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'maintenance');
+                      },
+                      child: Text(
+                        'Lupa password ?',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 15,
+                          color: Colors.black,
                         ),
                       ),
-                      SizedBox(width: 2.0),
-                      Text(
-                        'Ingat saya',
-                        style: TextStyle(color: Colors.black, fontSize: 15),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 90.0),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, 'maintenance');
-                          },
-                          child: Text(
-                            'Lupa password ?',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontSize: 15,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
                   SizedBox(
                     height: 60,
                   ),
                   TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'maintenance');
+                    onPressed: () async {
+                      if (_emailController.text.isEmpty ||
+                          _passwordController.text.isEmpty) {
+                        showSnackbar('Mohon isikan email dan password');
+                      } else {
+                        try {
+                          // Implement reCAPTCHA verification here
+                          // Example: await FirebaseAuth.instance.verifyPhoneNumber(...);
+
+                          UserCredential userCredential = await FirebaseAuth
+                              .instance
+                              .signInWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                          );
+
+                          Navigator.pushNamed(context, 'home');
+                        } catch (e) {
+                          String errorMessage;
+                          if (e is FirebaseAuthException) {
+                            switch (e.code) {
+                              case 'user-not-found':
+                                errorMessage = 'Email tidak ditemukan';
+                                break;
+                              case 'wrong-password':
+                                errorMessage = 'Password salah';
+                                break;
+                              case 'too-many-requests':
+                                errorMessage =
+                                    'Terlalu banyak percobaan, coba lagi nanti';
+                                break;
+                              default:
+                                errorMessage =
+                                    'Ada kesalahan, pastikan email dan password benar atau coba lagi nanti';
+                            }
+                          } else {
+                            errorMessage =
+                                'Terjadi kesalahan, silakan coba lagi.';
+                          }
+                          showSnackbar(errorMessage);
+                        }
+                      }
                     },
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.all(10.0),
@@ -228,6 +247,15 @@ class _myloginState extends State<mylogin> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
       ),
     );
   }

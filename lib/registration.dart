@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class register extends StatefulWidget {
   const register({Key? key}) : super(key: key);
@@ -9,7 +10,13 @@ class register extends StatefulWidget {
 }
 
 class _registerState extends State<register> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   bool _isObscure = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +66,7 @@ class _registerState extends State<register> {
                     ],
                   ),
                   TextField(
+                    controller: _nameController,
                     decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.person,
@@ -92,6 +100,7 @@ class _registerState extends State<register> {
                     ],
                   ),
                   TextField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.email,
@@ -125,6 +134,7 @@ class _registerState extends State<register> {
                     ],
                   ),
                   TextField(
+                    controller: _passwordController,
                     obscureText: _isObscure,
                     decoration: InputDecoration(
                         prefixIcon: Icon(
@@ -171,7 +181,8 @@ class _registerState extends State<register> {
                     ],
                   ),
                   TextField(
-                    obscureText: true,
+                    controller: _confirmPasswordController,
+                    obscureText: _isObscure,
                     decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.lock,
@@ -210,8 +221,49 @@ class _registerState extends State<register> {
                     height: 60,
                   ),
                   TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'maintenance');
+                    onPressed: () async {
+                      if (_passwordController.text !=
+                          _confirmPasswordController.text) {
+                        showSnackbar('Password tidak sesuai, mohon coba lagi.');
+                      }
+                      try {
+                        UserCredential userCredential = await FirebaseAuth
+                            .instance
+                            .createUserWithEmailAndPassword(
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        );
+
+                        // Update the user's profile with the name
+                        await userCredential.user
+                            ?.updateProfile(displayName: _nameController.text);
+
+                        // Navigate to login or home screen after successful registration
+                        Navigator.pushNamed(context, 'login');
+                      } catch (e) {
+                        String errorMessage;
+                        if (e is FirebaseAuthException) {
+                          switch (e.code) {
+                            case 'weak-password':
+                              errorMessage =
+                                  'password terlalu lemah, minimal 6 karakter.';
+                              break;
+                            case 'email-already-in-use':
+                              errorMessage = 'email sudah terpakai.';
+                              break;
+                            case 'invalid-email':
+                              errorMessage = 'email tidak valid.';
+                              break;
+                            default:
+                              errorMessage =
+                                  'Ada kesalahan, pastikan semua kolom terisi atau coba lagi nanti.';
+                          }
+                        } else {
+                          errorMessage = 'An error occurred. Please try again.';
+                        }
+                        showSnackbar(
+                            errorMessage); // Display the custom error message
+                      }
                     },
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.all(10.0),
@@ -255,6 +307,15 @@ class _registerState extends State<register> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
       ),
     );
   }

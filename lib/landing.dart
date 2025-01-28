@@ -28,52 +28,6 @@ class _mylandingState extends State<mylanding> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: EdgeInsets.only(top: 5, right: 5),
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.info_outline,
-                        color: Color(0xFF3B789A),
-                        size: 30,
-                      ), // Ikon titik tiga
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                              padding: EdgeInsets.all(20),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Informasi',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    'Ini adalah modifikasi mobile app untuk tugas mata kuliah pemrograman mobile.\n\n Nama: Rian Wibowo\n NIM: 3420210016',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 20),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pop(); // Menutup modal
-                                    },
-                                    child: Text('Tutup'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
                   Padding(
                       padding: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.25),
@@ -83,7 +37,7 @@ class _mylandingState extends State<mylanding> {
                               color: Color(0xFF3B789A),
                               letterSpacing: 5))),
                   SizedBox(
-                    height: 100,
+                    height: 180,
                   ),
                   TextButton(
                     onPressed: () {

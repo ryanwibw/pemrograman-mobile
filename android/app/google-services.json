@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "19297507129",
+    "project_id": "mari-62976",
+    "storage_bucket": "mari-62976.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19297507129:android:8ac34234183ef0fdbd7ae8",
+        "android_client_info": {
+          "package_name": "com.example.hello_apps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6VwPJp20Ojj56xmYuCPulACjm_Ym_6lw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
